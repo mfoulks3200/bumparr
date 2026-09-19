@@ -28,15 +28,15 @@ services:
       - TZ=${TZ:-UTC}
     volumes:
       # Your bumper library (rw so live-cam snippets + fetched PD content can land).
-      # - bumparr-assets:/assets:rw
-      # - bumparr-data:/data
-      - ./assets:/assets:rw
-      - ./data:/data
+      - bumparr-assets:/assets:rw
+      - bumparr-data:/data
+      # - ./assets:/assets:rw
+      # - ./data:/data
       # Live edits without rebuild (optional; safe to remove for a pinned deploy).
       - ./bumparr:/app/bumparr:ro
       - ./container-assets:/container-assets:ro
     restart: unless-stopped
 
-# volumes:
-#   bumparr-assets:
-#   bumparr-data:
+volumes:
+  bumparr-assets:
+  bumparr-data:
