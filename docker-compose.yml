@@ -32,8 +32,9 @@ services:
       - bumparr-data:/data
       # - ./assets:/assets:rw
       # - ./data:/data
-      # Live edits without rebuild (optional; safe to remove for a pinned deploy).
-      - ./bumparr:/app/bumparr:ro
+      # Application code is baked into the image. Do not bind-mount the Git
+      # checkout here: Portainer replaces that checkout during stack updates,
+      # which can make Python modules and web assets disappear mid-request.
       - ./container-assets:/container-assets:ro
     restart: unless-stopped
 
