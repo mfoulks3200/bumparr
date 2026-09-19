@@ -12,6 +12,8 @@ services:
       - ASSET_ROOT=/assets
       - DB_PATH=/data/bumparr.db
       - BRAND=${BRAND:-Bumparr}
+      - BRAND_FONT=${BRAND_FONT:-RockSalt-Regular.ttf}
+      - FONTS=${FONTS:-/container-assets/fonts}
       # Set behind a reverse proxy so emitted M3U / bumper URLs are absolute.
       - PUBLIC_URL=${PUBLIC_URL:-}
       # Optional local model for the model-generated card kinds; blank = skip.
@@ -26,8 +28,15 @@ services:
       - TZ=${TZ:-UTC}
     volumes:
       # Your bumper library (rw so live-cam snippets + fetched PD content can land).
-      - ${ASSETS:-./assets}:/assets:rw
-      - ${DATA:-./data}:/data
+      # - bumparr-assets:/assets:rw
+      # - bumparr-data:/data
+      - ./assets:/assets:rw
+      - ./data:/data
       # Live edits without rebuild (optional; safe to remove for a pinned deploy).
       - ./bumparr:/app/bumparr:ro
+      - ./container-assets:/container-assets:ro
     restart: unless-stopped
+
+# volumes:
+#   bumparr-assets:
+#   bumparr-data:

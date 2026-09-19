@@ -59,6 +59,21 @@ def font_pool(limit=None):
     return out[:limit] if limit else out
 
 
+def configured_face(pool=None):
+    """Resolve BRAND_FONT against the same path used by the roulette pool."""
+    name = config.BRAND_FONT
+    if not name:
+        return None
+    candidate = Path(name)
+    if candidate.is_absolute() and candidate.is_file() and candidate.suffix.lower() in FONT_EXT:
+        return str(candidate)
+    pool = pool if pool is not None else font_pool()
+    for face in pool:
+        if face.name == name:
+            return str(face)
+    return None
+
+
 def roll(rng=None, pool=None, prob=None):
     """Choose this clip's roulette: the faces it flickers through and where it lands.
 
@@ -77,8 +92,9 @@ def roll(rng=None, pool=None, prob=None):
         return None
     n = min(len(pool), MAX_FACES)
     faces = rng.sample(pool, n)
+    landing = configured_face(pool) or str(rng.choice(faces))
     return {"faces": [str(f) for f in faces],
-            "landing": str(rng.choice(faces)),
+            "landing": landing,
             "seed": rng.randrange(1 << 30)}
 
 
@@ -189,11 +205,14 @@ def fit_size(face_path, text, max_w, start_px, min_px=28):
 def static_face(rng=None, pool=None):
     """The single face a non-rolling slam uses.
 
-    Still chosen per clip rather than fixed, so static slams vary across the
-    pool too — otherwise every non-rolling bumper would look identical.
+    BRAND_FONT is authoritative when configured. Without it, retain the
+    per-clip variation used by older configurations.
     """
     rng = rng or random
     pool = pool if pool is not None else font_pool()
+    brand_face = configured_face(pool)
+    if brand_face:
+        return brand_face
     if not pool:
         return None
     return str(rng.choice(pool))

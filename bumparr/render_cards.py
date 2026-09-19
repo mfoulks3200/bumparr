@@ -99,7 +99,7 @@ def _font_dirs():
     tree; the player's font directory is still searched when the two are
     deployed together, so a shared brand font resolves from either side.
     """
-    dirs = [Path(__file__).resolve().parent / "fonts"]
+    dirs = [Path(config.FONT_DIR), Path(__file__).resolve().parent / "fonts"]
     try:
         dirs.append(Path(config.FRONTEND_DIR) / "fonts")
     except Exception:
