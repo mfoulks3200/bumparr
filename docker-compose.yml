@@ -28,9 +28,9 @@ services:
       - TZ=${TZ:-UTC}
     volumes:
       # Your bumper library (rw so live-cam snippets + fetched PD content can land).
-      # - bumparr-assets:/assets:rw
+      - bumparr-assets:/assets:rw
       - bumparr-data:/data
-      - ./assets:/assets:rw
+      # - ./assets:/assets:rw
       # - ./data:/data
       # Application code is baked into the image. Do not bind-mount the Git
       # checkout here: Portainer replaces that checkout during stack updates,
@@ -40,4 +40,5 @@ services:
 
 volumes:
   bumparr-data:
-#   bumparr-assets:
+  bumparr-assets:
+    name: bumparr-assets
