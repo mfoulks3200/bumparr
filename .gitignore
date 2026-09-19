@@ -7,6 +7,7 @@ venv/
 
 # Local config & secrets
 .env
+prod.env
 
 # Runtime data — the bumper library, DB, and caches are the deployer's, not the repo's
 data/
